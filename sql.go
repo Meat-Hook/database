@@ -1,4 +1,4 @@
-package sql
+package database
 
 import (
 	"context"
@@ -10,7 +10,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
-	"github.com/Meat-Hook/repo"
 	"github.com/Meat-Hook/repo/internal"
 )
 
@@ -25,7 +24,7 @@ const (
 // Config for set additional properties.
 type Config struct {
 	ReturnErrs            []error
-	Metrics               repo.MetricCollector
+	Metrics               MetricCollector
 	SetConnMaxLifetime    time.Duration
 	SetConnMaxIdleTime    time.Duration
 	SetMaxOpenConnections int
@@ -34,7 +33,7 @@ type Config struct {
 
 func (c Config) setDefault() Config {
 	if c.Metrics == nil {
-		c.Metrics = repo.NoMetric{}
+		c.Metrics = NoMetric{}
 	}
 	if c.SetConnMaxLifetime == 0 {
 		c.SetConnMaxLifetime = DefaultSetConnMaxLifetime
@@ -57,15 +56,15 @@ type Connector interface {
 	DSN() (string, error)
 }
 
-// DB is a wrapper for sql database.
-type DB struct {
+// SQL is a wrapper for sql database.
+type SQL struct {
 	conn       *sqlx.DB
 	returnErrs []error
-	metrics    repo.MetricCollector
+	metrics    MetricCollector
 }
 
-// New build and returns new DB.
-func New(ctx context.Context, driver string, cfg Config, connector Connector) (*DB, error) {
+// New build and returns new SQL.
+func New(ctx context.Context, driver string, cfg Config, connector Connector) (*SQL, error) {
 	cfg = cfg.setDefault()
 
 	dsn, err := connector.DSN()
@@ -87,7 +86,7 @@ func New(ctx context.Context, driver string, cfg Config, connector Connector) (*
 		err = nextErr
 	}
 
-	db := &DB{
+	db := &SQL{
 		conn:       sqlx.NewDb(conn, driver),
 		returnErrs: cfg.ReturnErrs,
 		metrics:    cfg.Metrics,
@@ -105,7 +104,7 @@ func New(ctx context.Context, driver string, cfg Config, connector Connector) (*
 // https://github.com/jmoiron/sqlx/issues/529. As we can't distinguish
 // between sqlx and other errors except driver ones, let's hope filtering
 // driver errors is enough and there are no other non-driver regular errors.
-func (db *DB) strict(err error) error {
+func (db *SQL) strict(err error) error {
 	switch {
 	case err == nil:
 	case errors.As(err, new(*pq.Error)):
@@ -124,7 +123,7 @@ func (db *DB) strict(err error) error {
 }
 
 // Close implements io.Closer.
-func (db *DB) Close() error {
+func (db *SQL) Close() error {
 	return db.conn.Close()
 }
 
@@ -132,7 +131,7 @@ func (db *DB) Close() error {
 // - converting sqlx errors which are actually bugs into panics,
 // - general metrics for DAL methods,
 // - wrapping errors with DAL method name.
-func (db *DB) NoTx(f func(*sqlx.DB) error) (err error) {
+func (db *SQL) NoTx(f func(*sqlx.DB) error) (err error) {
 	methodName := internal.CallerMethodName(1)
 	return db.strict(db.metrics.Collecting(methodName, func() error {
 		err := f(db.conn)
@@ -148,7 +147,7 @@ func (db *DB) NoTx(f func(*sqlx.DB) error) (err error) {
 // - general metrics for DAL methods,
 // - wrapping errors with DAL method name,
 // - transaction.
-func (db *DB) Tx(ctx context.Context, opts *sql.TxOptions, f func(*sqlx.Tx) error) (err error) {
+func (db *SQL) Tx(ctx context.Context, opts *sql.TxOptions, f func(*sqlx.Tx) error) (err error) {
 	methodName := internal.CallerMethodName(1)
 	return db.strict(db.metrics.Collecting(methodName, func() error {
 		tx, err := db.conn.BeginTxx(ctx, opts)

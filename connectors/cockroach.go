@@ -9,7 +9,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	connector "github.com/Meat-Hook/repo/sql"
+	connector "github.com/Meat-Hook/repo"
 )
 
 var (

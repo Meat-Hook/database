@@ -1,4 +1,4 @@
-// Package internal provide helpers for repo.
+// Package internal provide helpers for database.
 package internal
 
 import (
