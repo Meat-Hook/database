@@ -21,8 +21,8 @@ const (
 	DefaultSetMaxIdleConnections = 50
 )
 
-// Config for set additional properties.
-type Config struct {
+// SQLConfig for set additional properties.
+type SQLConfig struct {
 	ReturnErrs            []error
 	Metrics               MetricCollector
 	SetConnMaxLifetime    time.Duration
@@ -31,7 +31,7 @@ type Config struct {
 	SetMaxIdleConnections int
 }
 
-func (c Config) setDefault() Config {
+func (c SQLConfig) setDefault() SQLConfig {
 	if c.Metrics == nil {
 		c.Metrics = NoMetric{}
 	}
@@ -63,8 +63,8 @@ type SQL struct {
 	metrics    MetricCollector
 }
 
-// New build and returns new SQL.
-func New(ctx context.Context, driver string, cfg Config, connector Connector) (*SQL, error) {
+// NewSQL build and returns new SQL client.
+func NewSQL(ctx context.Context, driver string, cfg SQLConfig, connector Connector) (*SQL, error) {
 	cfg = cfg.setDefault()
 
 	dsn, err := connector.DSN()
