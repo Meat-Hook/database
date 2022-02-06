@@ -1,4 +1,4 @@
-module github.com/Meat-Hook/repo
+module github.com/Meat-Hook/database
 
 go 1.17
 

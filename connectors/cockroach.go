@@ -9,14 +9,14 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	connector "github.com/Meat-Hook/repo"
+	"github.com/Meat-Hook/database"
 )
 
 var (
 	_ yaml.Unmarshaler         = (*CockroachSSL)(nil)
 	_ json.Unmarshaler         = (*CockroachSSL)(nil)
 	_ encoding.TextUnmarshaler = (*CockroachSSL)(nil)
-	_ connector.Connector      = (*CockroachDB)(nil)
+	_ database.Connector       = (*CockroachDB)(nil)
 )
 
 // CockroachSSL is a type for setting connection ssl mode to CockroachDB.

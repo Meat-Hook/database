@@ -10,7 +10,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
-	"github.com/Meat-Hook/repo/internal"
+	"github.com/Meat-Hook/database/internal"
 )
 
 // Default values for config.
