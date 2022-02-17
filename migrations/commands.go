@@ -46,15 +46,19 @@ func Run(ctx context.Context, driver string, connector database.Connector, cmd C
 	db := sqlx.NewDb(conn, driver)
 
 	sort.Sort(migrations)
-
 	switch cmd {
 	case Up:
-		return upAll(ctx, db, migrations)
+		err = upAll(ctx, db, migrations)
 	case Down:
-		return rollback(ctx, db, migrations)
+		err = rollback(ctx, db, migrations)
 	default:
-		return fmt.Errorf("unknown command: %d", cmd)
+		err = fmt.Errorf("unknown command: %d", cmd)
 	}
+	if err != nil {
+		return err
+	}
+
+	return db.Close()
 }
 
 func rollback(ctx context.Context, db *sqlx.DB, migrations Migrations) error {
