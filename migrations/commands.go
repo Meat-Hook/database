@@ -122,7 +122,7 @@ func upOneVersion(ctx context.Context, db *sqlx.DB, migration Migration) (err er
 		return fmt.Errorf("tx.ExecContext %w", err)
 	}
 
-	_, err = tx.ExecContext(ctx, "insert into migration (current_version) values ($1)", migration.Version)
+	_, err = tx.ExecContext(ctx, "insert into migration (version) values ($1)", migration.Version)
 	if err != nil {
 		return fmt.Errorf("tx.ExecContext: %w", err)
 	}
@@ -160,10 +160,10 @@ func down(ctx context.Context, db *sqlx.DB, migration Migration) (err error) {
 func currentVersion(ctx context.Context, db *sqlx.DB) (uint, error) {
 	const initTable = `create table if not exists migration
 (
-    current_version integer         not null,
+    version integer         		not null,
     time    timestamp default now() not null,
-    unique (current_version),
-    primary key (id)
+    unique (version),
+    primary key (version)
 );`
 
 	_, err := db.ExecContext(ctx, initTable)
@@ -171,7 +171,7 @@ func currentVersion(ctx context.Context, db *sqlx.DB) (uint, error) {
 		return 0, fmt.Errorf("db.ExecContext: %w", err)
 	}
 
-	const query = `SELECT current_version FROM migration ORDER BY current_version DESC LIMIT 1`
+	const query = `SELECT version FROM migration ORDER BY version DESC LIMIT 1`
 	version := uint(0)
 	err = db.QueryRowContext(ctx, query).Scan(&version)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
