@@ -162,7 +162,7 @@ func currentVersion(ctx context.Context, db *sqlx.DB) (uint, error) {
 (
     current_version integer         not null,
     time    timestamp default now() not null,
-    unique (currentVersion),
+    unique (current_version),
     primary key (id)
 );`
 
