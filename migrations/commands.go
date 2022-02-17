@@ -171,7 +171,7 @@ func currentVersion(ctx context.Context, db *sqlx.DB) (uint, error) {
 		return 0, fmt.Errorf("db.ExecContext: %w", err)
 	}
 
-	const query = `SELECT currentVersion FROM migration ORDER BY currentVersion DESC LIMIT 1`
+	const query = `SELECT current_version FROM migration ORDER BY current_version DESC LIMIT 1`
 	version := uint(0)
 	err = db.QueryRowContext(ctx, query).Scan(&version)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
