@@ -74,38 +74,38 @@ const (
 type (
 	// CockroachDBVariable sets variable for connections.
 	CockroachDBVariable struct {
-		Name  string `yaml:"name" json:"name" hcl:"name"`
-		Value string `yaml:"value" json:"value" hcl:"value"`
+		Name  string `yaml:"name" json:"name"`
+		Value string `yaml:"value" json:"value"`
 	}
 
 	// CockroachDBOptions contains options for setting variables and cluster ID.
 	CockroachDBOptions struct {
-		Cluster  string              `yaml:"cluster" json:"cluster" hcl:"cluster"`
-		Variable CockroachDBVariable `yaml:"variable" json:"variable" hcl:"variable,block"`
+		Cluster  string              `yaml:"cluster" json:"cluster"`
+		Variable CockroachDBVariable `yaml:"variable" json:"variable"`
 	}
 
 	// CockroachDBParameters contains url parameters for connecting to database.
 	CockroachDBParameters struct {
-		ApplicationName string       `yaml:"application_name" json:"application_name" hcl:"application_name"`
+		ApplicationName string       `yaml:"application_name" json:"application_name"`
 		Mode            CockroachSSL `yaml:"mode" json:"mode" hcl:"mode"`
-		SSLRootCert     string       `yaml:"ssl_root_cert" json:"ssl_root_cert" hcl:"ssl_root_cert"`
-		SSLCert         string       `yaml:"ssl_cert" json:"ssl_cert" hcl:"ssl_cert"`
-		SSLKey          string       `yaml:"ssl_key" json:"ssl_key" hcl:"ssl_key"`
+		SSLRootCert     string       `yaml:"ssl_root_cert" json:"ssl_root_cert"`
+		SSLCert         string       `yaml:"ssl_cert" json:"ssl_cert"`
+		SSLKey          string       `yaml:"ssl_key" json:"ssl_key"`
 
 		// It isn't recommended, so it's disable. You must use CockroachDB.Password instead of it.
 		// Password        string
 
-		Options *CockroachDBOptions `yaml:"options" json:"options" hcl:"options,block"`
+		Options *CockroachDBOptions `yaml:"options" json:"options"`
 	}
 
 	// CockroachDB config for connecting to cockroachDB.
 	CockroachDB struct {
-		User       string                 `yaml:"user" json:"user" hcl:"user"`
-		Password   string                 `yaml:"password" json:"password" hcl:"password"`
-		Host       string                 `yaml:"host" json:"host" hcl:"host"`
-		Port       int                    `yaml:"port" json:"port" hcl:"port"`
-		Database   string                 `yaml:"database" json:"database" hcl:"database"`
-		Parameters *CockroachDBParameters `yaml:"parameters" json:"parameters" hcl:"parameters,block"`
+		User       string                 `yaml:"user" json:"user"`
+		Password   string                 `yaml:"password" json:"password"`
+		Host       string                 `yaml:"host" json:"host"`
+		Port       int                    `yaml:"port" json:"port"`
+		Database   string                 `yaml:"database" json:"database"`
+		Parameters *CockroachDBParameters `yaml:"parameters" json:"parameters"`
 
 		// We don't have support for UNIX domain socket.
 		// DirectoryPath string `yaml:"directory_path" json:"directory_path"`

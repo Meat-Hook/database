@@ -15,7 +15,7 @@ import (
 
 // Default values for config.
 const (
-	DefaultSetConnMaxLifetime    = time.Second * 10
+	DefaultSetConnMaxLifetime    = time.Second * 60
 	DefaultSetConnMaxIdleTime    = time.Second * 10
 	DefaultSetMaxOpenConnections = 50
 	DefaultSetMaxIdleConnections = 50
