@@ -74,9 +74,9 @@ func rollback(ctx context.Context, db *sqlx.DB, migrations Migrations) error {
 			continue
 		}
 
-		_, err := db.ExecContext(ctx, migration.Up)
+		err := down(ctx, db, migration)
 		if err != nil {
-			return fmt.Errorf("db.ExecContext: %w", err)
+			return fmt.Errorf("upOneVersion: %w", err)
 		}
 	}
 
@@ -94,9 +94,9 @@ func upAll(ctx context.Context, db *sqlx.DB, migrations Migrations) error {
 			continue
 		}
 
-		_, err := db.ExecContext(ctx, migration.Up)
+		err := upOneVersion(ctx, db, migration)
 		if err != nil {
-			return fmt.Errorf("db.ExecContext: %w", err)
+			return fmt.Errorf("upOneVersion: %w", err)
 		}
 	}
 
