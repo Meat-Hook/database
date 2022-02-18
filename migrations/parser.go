@@ -13,8 +13,8 @@ import (
 // TODO: very fragile code, fix it.
 
 const (
-	delimUp   = `-- delimUp`
-	delimDown = `-- delimDown`
+	delimUp   = `-- up`
+	delimDown = `-- down`
 
 	migrationExt = `.sql`
 )
