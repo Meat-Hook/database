@@ -155,7 +155,7 @@ func (db *SQL) Tx(ctx context.Context, opts *sql.TxOptions, f func(*sqlx.Tx) err
 			defer func() {
 				if err := recover(); err != nil {
 					if errRollback := tx.Rollback(); errRollback != nil {
-						err = fmt.Errorf("%v: %s", err, errRollback)
+						err = fmt.Errorf("%w: %s", err, errRollback)
 					}
 					panic(err)
 				}
@@ -164,7 +164,7 @@ func (db *SQL) Tx(ctx context.Context, opts *sql.TxOptions, f func(*sqlx.Tx) err
 			if err == nil {
 				err = tx.Commit()
 			} else if errRollback := tx.Rollback(); errRollback != nil {
-				err = fmt.Errorf("%v: %s", err, errRollback)
+				err = fmt.Errorf("%w: %s", err, errRollback)
 			}
 		}
 		if err != nil {

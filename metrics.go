@@ -85,6 +85,6 @@ var _ MetricCollector = NoMetric{}
 type NoMetric struct{}
 
 // Collecting implements MetricCollector.
-func (n NoMetric) Collecting(_ string, _ func() error) func() error {
-	return func() error { return nil }
+func (n NoMetric) Collecting(_ string, f func() error) func() error {
+	return func() error { return f() }
 }
