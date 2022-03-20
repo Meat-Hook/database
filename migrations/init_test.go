@@ -1,6 +1,6 @@
 package migrations_test
 
-import "github.com/Meat-Hook/database/migrations"
+import "github.com/sipki-group/database/migrations"
 
 var (
 	path = "./testdata"

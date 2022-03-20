@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/Meat-Hook/database/migrations"
+	"github.com/sipki-group/database/migrations"
 )
 
 func TestCollectMigrations(t *testing.T) {

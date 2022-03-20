@@ -1,6 +1,6 @@
 package connectors_test
 
-import "github.com/Meat-Hook/database/connectors"
+import "github.com/sipki-group/database/connectors"
 
 var (
 	fullConfig = connectors.CockroachDB{

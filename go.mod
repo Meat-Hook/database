@@ -1,6 +1,6 @@
-module github.com/Meat-Hook/database
+module github.com/sipki-group/database
 
-go 1.17
+go 1.18
 
 require (
 	github.com/jmoiron/sqlx v1.3.4
@@ -20,6 +20,6 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	golang.org/x/sys v0.0.0-20220204135822-1c1b9b1eba6a // indirect
+	golang.org/x/sys v0.0.0-20220319134239-a9b59b0215f8 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 )
