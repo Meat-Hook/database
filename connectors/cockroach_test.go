@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
-	"github.com/sipki-group/database/connectors"
+	"github.com/sipki-corp/database/connectors"
 )
 
 func TestCockroachDB_Unmarshal(t *testing.T) {

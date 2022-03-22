@@ -9,7 +9,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/sipki-group/database"
+	"github.com/sipki-corp/database"
 )
 
 var (

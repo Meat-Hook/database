@@ -1,4 +1,4 @@
-module github.com/sipki-group/database
+module github.com/sipki-corp/database
 
 go 1.18
 

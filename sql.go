@@ -10,7 +10,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
-	"github.com/sipki-group/database/internal"
+	"github.com/sipki-corp/database/internal"
 )
 
 // Default values for config.
@@ -155,7 +155,7 @@ func (db *SQL) Tx(ctx context.Context, opts *sql.TxOptions, f func(*sqlx.Tx) err
 			defer func() {
 				if err := recover(); err != nil {
 					if errRollback := tx.Rollback(); errRollback != nil {
-						err = fmt.Errorf("%w: %s", err, errRollback)
+						err = fmt.Errorf("%v: %s", err, errRollback)
 					}
 					panic(err)
 				}

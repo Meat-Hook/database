@@ -5,7 +5,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 
-	"github.com/sipki-group/database/internal"
+	"github.com/sipki-corp/database/internal"
 )
 
 // MetricCollector is a helper for easy collecting metrics for every handler.
