@@ -9,7 +9,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/sipki-corp/database"
+	"github.com/sipki-tech/database"
 )
 
 var (
@@ -113,7 +113,7 @@ type (
 )
 
 // DSN convert struct to DSN and returns connection string.
-func (c CockroachDB) DSN() (string, error) {
+func (c *CockroachDB) DSN() (string, error) {
 	str := fmt.Sprintf("postgres://%s:%s@%s:%d/%s",
 		c.User,
 		c.Password,

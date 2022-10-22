@@ -1,9 +1,9 @@
 package connectors_test
 
-import "github.com/sipki-corp/database/connectors"
+import "github.com/sipki-tech/database/connectors"
 
 var (
-	fullConfig = connectors.CockroachDB{
+	fullCockroachConfig = connectors.CockroachDB{
 		User:     "user",
 		Password: "password",
 		Host:     "127.0.0.1",

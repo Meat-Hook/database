@@ -10,7 +10,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
-	"github.com/sipki-corp/database/internal"
+	"github.com/sipki-tech/database/internal"
 )
 
 // Default values for config.

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
-	"github.com/sipki-corp/database/connectors"
+	"github.com/sipki-tech/database/connectors"
 )
 
 func TestCockroachDB_Unmarshal(t *testing.T) {
@@ -33,7 +33,7 @@ func TestCockroachDB_Unmarshal(t *testing.T) {
 			value := connectors.CockroachDB{}
 			err = tc.decoder(b, &value)
 			r.NoError(err)
-			r.Equal(fullConfig, value)
+			r.Equal(fullCockroachConfig, value)
 		})
 	}
 }
@@ -62,31 +62,31 @@ func TestCockroachDB_DSN(t *testing.T) {
 	var (
 		allDSNExp = "postgres://user:password@127.0.0.1:26257/defaultdb?application_name=application_name&options=--cluster%3Dcluster_id+-c+name%3Dvalue&sslcert=path%2Fto%2Fssl%2Fcert&sslkey=path%2Fto%2Fssl%2Fkey&sslmode=disable&sslrootcert=path%2Fto%2Fssl%2Froot"
 
-		withoutParametersOptionsVariable       = change(fullConfig, func(t *T) { t.Parameters.Options.Variable = connectors.CockroachDBVariable{} })
+		withoutParametersOptionsVariable       = change(fullCockroachConfig, func(t *T) { t.Parameters.Options.Variable = connectors.CockroachDBVariable{} })
 		withoutParametersOptionsVariableDSNExp = "postgres://user:password@127.0.0.1:26257/defaultdb?application_name=application_name&options=--cluster%3Dcluster_id&sslcert=path%2Fto%2Fssl%2Fcert&sslkey=path%2Fto%2Fssl%2Fkey&sslmode=disable&sslrootcert=path%2Fto%2Fssl%2Froot"
 
-		withoutParametersOptionsCluster       = change(fullConfig, func(t *T) { t.Parameters.Options.Cluster = "" })
+		withoutParametersOptionsCluster       = change(fullCockroachConfig, func(t *T) { t.Parameters.Options.Cluster = "" })
 		withoutParametersOptionsClusterDSNExp = "postgres://user:password@127.0.0.1:26257/defaultdb?application_name=application_name&options=-c+name%3Dvalue&sslcert=path%2Fto%2Fssl%2Fcert&sslkey=path%2Fto%2Fssl%2Fkey&sslmode=disable&sslrootcert=path%2Fto%2Fssl%2Froot"
 
-		withoutParametersOptions       = change(fullConfig, func(t *T) { t.Parameters.Options = nil })
+		withoutParametersOptions       = change(fullCockroachConfig, func(t *T) { t.Parameters.Options = nil })
 		withoutParametersOptionsDSNExp = "postgres://user:password@127.0.0.1:26257/defaultdb?application_name=application_name&sslcert=path%2Fto%2Fssl%2Fcert&sslkey=path%2Fto%2Fssl%2Fkey&sslmode=disable&sslrootcert=path%2Fto%2Fssl%2Froot"
 
-		withoutParametersSSLKey       = change(fullConfig, func(t *T) { t.Parameters.Options = nil; t.Parameters.SSLKey = "" })
+		withoutParametersSSLKey       = change(fullCockroachConfig, func(t *T) { t.Parameters.Options = nil; t.Parameters.SSLKey = "" })
 		withoutParametersSSLKeyDSNExp = "postgres://user:password@127.0.0.1:26257/defaultdb?application_name=application_name&sslcert=path%2Fto%2Fssl%2Fcert&sslmode=disable&sslrootcert=path%2Fto%2Fssl%2Froot"
 
-		withoutParametersSSLCert       = change(fullConfig, func(t *T) { t.Parameters.Options = nil; t.Parameters.SSLCert = "" })
+		withoutParametersSSLCert       = change(fullCockroachConfig, func(t *T) { t.Parameters.Options = nil; t.Parameters.SSLCert = "" })
 		withoutParametersSSLCertDSNExp = "postgres://user:password@127.0.0.1:26257/defaultdb?application_name=application_name&sslkey=path%2Fto%2Fssl%2Fkey&sslmode=disable&sslrootcert=path%2Fto%2Fssl%2Froot"
 
-		withoutParametersSSLRoot       = change(fullConfig, func(t *T) { t.Parameters.Options = nil; t.Parameters.SSLRootCert = "" })
+		withoutParametersSSLRoot       = change(fullCockroachConfig, func(t *T) { t.Parameters.Options = nil; t.Parameters.SSLRootCert = "" })
 		withoutParametersSSLRootDSNExp = "postgres://user:password@127.0.0.1:26257/defaultdb?application_name=application_name&sslcert=path%2Fto%2Fssl%2Fcert&sslkey=path%2Fto%2Fssl%2Fkey&sslmode=disable"
 
-		withoutParametersSSLMod       = change(fullConfig, func(t *T) { t.Parameters.Options = nil; t.Parameters.Mode = 0 })
+		withoutParametersSSLMod       = change(fullCockroachConfig, func(t *T) { t.Parameters.Options = nil; t.Parameters.Mode = 0 })
 		withoutParametersSSLModDSNExp = "postgres://user:password@127.0.0.1:26257/defaultdb?application_name=application_name&sslcert=path%2Fto%2Fssl%2Fcert&sslkey=path%2Fto%2Fssl%2Fkey&sslrootcert=path%2Fto%2Fssl%2Froot"
 
-		withoutParametersApplicationName       = change(fullConfig, func(t *T) { t.Parameters.Options = nil; t.Parameters.ApplicationName = "" })
+		withoutParametersApplicationName       = change(fullCockroachConfig, func(t *T) { t.Parameters.Options = nil; t.Parameters.ApplicationName = "" })
 		withoutParametersApplicationNameDSNExp = "postgres://user:password@127.0.0.1:26257/defaultdb?sslcert=path%2Fto%2Fssl%2Fcert&sslkey=path%2Fto%2Fssl%2Fkey&sslmode=disable&sslrootcert=path%2Fto%2Fssl%2Froot"
 
-		withoutParameters       = change(fullConfig, func(t *T) { t.Parameters = nil })
+		withoutParameters       = change(fullCockroachConfig, func(t *T) { t.Parameters = nil })
 		withoutParametersDSNExp = "postgres://user:password@127.0.0.1:26257/defaultdb"
 	)
 
@@ -94,7 +94,7 @@ func TestCockroachDB_DSN(t *testing.T) {
 		cfg T
 		exp string
 	}{
-		"all":                                 {fullConfig, allDSNExp},
+		"all":                                 {fullCockroachConfig, allDSNExp},
 		"without_parameters_options_variable": {withoutParametersOptionsVariable, withoutParametersOptionsVariableDSNExp},
 		"without_parameters_options_cluster":  {withoutParametersOptionsCluster, withoutParametersOptionsClusterDSNExp},
 		"without_parameters_options":          {withoutParametersOptions, withoutParametersOptionsDSNExp},

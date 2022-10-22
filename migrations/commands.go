@@ -9,7 +9,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/sipki-corp/database"
+	"github.com/sipki-tech/database"
 )
 
 // Command of migration
