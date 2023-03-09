@@ -8,8 +8,6 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/lib/pq"
-
 	"github.com/sipki-tech/database/internal"
 )
 
@@ -100,29 +98,6 @@ func NewSQL(ctx context.Context, driver string, cfg SQLConfig, connector Connect
 	return db, nil
 }
 
-// Turn sqlx errors like `missing destination …` into panics
-// https://github.com/jmoiron/sqlx/issues/529. As we can't distinguish
-// between sqlx and other errors except driver ones, let's hope filtering
-// driver errors is enough and there are no other non-driver regular errors.
-// TODO: Remove or improve.
-func (db *SQL) strict(err error) error {
-	switch {
-	case err == nil:
-	case errors.As(err, new(*pq.Error)):
-	case errors.Is(err, sql.ErrNoRows):
-	case errors.Is(err, context.Canceled):
-	case errors.Is(err, context.DeadlineExceeded):
-	default:
-		for i := range db.returnErrs {
-			if errors.Is(err, db.returnErrs[i]) {
-				return err
-			}
-		}
-		panic(err)
-	}
-	return err
-}
-
 // Close implements io.Closer.
 func (db *SQL) Close() error {
 	return db.conn.Close()
@@ -134,13 +109,13 @@ func (db *SQL) Close() error {
 // - wrapping errors with DAL method name.
 func (db *SQL) NoTx(f func(*sqlx.DB) error) (err error) {
 	methodName := internal.CallerMethodName(1)
-    return db.metrics.Collecting(methodName, func() error {
-        err := f(db.conn)
-        if err != nil {
-            err = fmt.Errorf("%s: %w", methodName, err)
-        }
-        return err
-    })()
+	return db.metrics.Collecting(methodName, func() error {
+		err := f(db.conn)
+		if err != nil {
+			err = fmt.Errorf("%s: %w", methodName, err)
+		}
+		return err
+	})()
 }
 
 // Tx provides DAL method wrapper with:
@@ -150,27 +125,27 @@ func (db *SQL) NoTx(f func(*sqlx.DB) error) (err error) {
 // - transaction.
 func (db *SQL) Tx(ctx context.Context, opts *sql.TxOptions, f func(*sqlx.Tx) error) (err error) {
 	methodName := internal.CallerMethodName(1)
-    return db.metrics.Collecting(methodName, func() error {
-        tx, err := db.conn.BeginTxx(ctx, opts)
-        if err == nil { //nolint:nestif // No idea how to simplify.
-            defer func() {
-                if err := recover(); err != nil {
-                    if errRollback := tx.Rollback(); errRollback != nil {
-                        err = fmt.Errorf("%v: %s", err, errRollback)
-                    }
-                    panic(err)
-                }
-            }()
-            err = f(tx)
-            if err == nil {
-                err = tx.Commit()
-            } else if errRollback := tx.Rollback(); errRollback != nil {
-                err = fmt.Errorf("%w: %s", err, errRollback)
-            }
-        }
-        if err != nil {
-            err = fmt.Errorf("%s: %w", methodName, err)
-        }
-        return err
-    })()
+	return db.metrics.Collecting(methodName, func() error {
+		tx, err := db.conn.BeginTxx(ctx, opts)
+		if err == nil { //nolint:nestif // No idea how to simplify.
+			defer func() {
+				if err := recover(); err != nil {
+					if errRollback := tx.Rollback(); errRollback != nil {
+						err = fmt.Errorf("%v: %s", err, errRollback)
+					}
+					panic(err)
+				}
+			}()
+			err = f(tx)
+			if err == nil {
+				err = tx.Commit()
+			} else if errRollback := tx.Rollback(); errRollback != nil {
+				err = fmt.Errorf("%w: %s", err, errRollback)
+			}
+		}
+		if err != nil {
+			err = fmt.Errorf("%s: %w", methodName, err)
+		}
+		return err
+	})()
 }
