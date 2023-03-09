@@ -16,7 +16,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v2
         with:
-          version: v1.49.0
+          version: v1.51.2
 
   test:
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v1
         with:
-          go-version: 1.19
+          go-version: 1.20
 
       - name: Checkout repository.
         uses: actions/checkout@v2
